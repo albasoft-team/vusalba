@@ -1,0 +1,198 @@
+{% extends 'base.html.twig' %}
+{% block analyze %}
+    <div class="box box-default" >
+        <div class="box-header with-border">
+            <h3 class="box-title">Préparation des données</h3>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div id="composant" class="form-group">
+                        <img src="{{ asset('img/minload.gif') }}" alt="loading"  id="minloadComp">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div id="axe" class="form-group">
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div id="scope" class="form-group">
+
+                    </div>
+                </div>
+                <!-- /.col -->
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+    </div>
+{% endblock %}
+{% block body %}
+    <div ng-controller="composantController">
+        <div class="modal fade" id="frmCompModal" tabindex="-1" role="dialog" type_operationaria-labelledby="frmCompModal" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="box-header well" data-original-title="">
+                            <h2 style="margin-top: 0px;font-size: 18px"><i class="glyphicon glyphicon-edit"></i> Ajouter un composant</h2>
+                            <div class="box-icon" style="float: right; margin-top: -34px">
+                                <a style="padding: 5px; border-radius: 50px" href="#" id="close" class="btn btn-close btn-round btn-default" data-dismiss="modal" aria-hidden="true">
+                                    <i class="glyphicon glyphicon-remove"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="box">
+                            <div class="box-inner">
+                                <div class="box-content" id="contentModalComp">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="frmAxeModal" tabindex="-1" role="dialog" type_operationaria-labelledby="frmAxeModal" aria-hidden="true" >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="box-header well" data-original-title="">
+                            <h2 style="margin-top: 0px;font-size: 18px"><i class="glyphicon glyphicon-edit"></i> Ajouter un Axe</h2>
+                            <div class="box-icon" style="float: right; margin-top: -34px">
+                                <a style="padding: 5px; border-radius: 50px" href="#" id="closeAxe" class="btn btn-close btn-round btn-default" data-dismiss="modal" aria-hidden="true">
+                                    <i class="glyphicon glyphicon-remove"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="box">
+                            <div class="box-inner">
+                                <div class="box-content" id="contentModalAxe">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="frmScopeModal" tabindex="-1" role="dialog" type_operationaria-labelledby="frmAxeModal" aria-hidden="true" >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="box-header well" data-original-title="">
+                            <h2 style="margin-top: 0px;font-size: 18px"><i class="glyphicon glyphicon-edit"></i> Ajouter une portée</h2>
+                            <div class="box-icon" style="float: right; margin-top: -34px">
+                                <a style="padding: 5px; border-radius: 50px" href="#" id="closeScope" class="btn btn-close btn-round btn-default" data-dismiss="modal" aria-hidden="true">
+                                    <i class="glyphicon glyphicon-remove"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="box">
+                            <div class="box-inner">
+                                <div class="box-content" id="contentModalScope">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Custom Tabs -->
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#tab_1" onclick="_get('list_composant','','composants','loadingComp')" data-toggle="tab">Composants</a></li>
+                        <li><a href="#tab_2" onclick="_get('list_axe','','axes','loadingaxe')" data-toggle="tab">Axes</a></li>
+                        <li><a href="#tab_3" onclick="_get('list_node','','nodes','loadingaxe')" data-toggle="tab">Noeuds</a></li>
+                        <li><a href="#tab_4" onclick="_get('list_level','','levels','loadinglevel')" data-toggle="tab">Niveaux</a></li>
+                        <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tab_1">
+                            <div class="box">
+                                <div class="box-header">
+                                    <h3 class="box-title">Liste des composants</h3>
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body" id="composants">
+                                    <img src="{{ asset('img/minload.gif') }}" alt="loading" id="loadingComp">
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+
+                        </div>
+                        <!-- /.tab-pane -->
+                        <div class="tab-pane" id="tab_2">
+                            <div class="box">
+                                <div class="box-header">
+                                    <h3 class="box-title">Liste des axes</h3>
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body" id="axes">
+                                    <img src="{{ asset('img/minload.gif') }}" alt="loading" id="loadingaxe">
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                        </div>
+                        <!-- /.tab-pane -->
+                        <div class="tab-pane" id="tab_3">
+                            <div class="box">
+                                <div class="box-header">
+                                    <h3 class="box-title">Liste des noeuds</h3>
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body" id="nodes">
+                                </div>
+                                <img src="{{ asset('img/minload.gif') }}" alt="loading" hidden="hidden" id="loadingaxe">
+                                <!-- /.box-body -->
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tab_4">
+                            <div class="box">
+                                <div class="box-header">
+                                    <h3 class="box-title">Liste des Niveaux</h3>
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body" id="levels">
+                                </div>
+                                <img src="{{ asset('img/minload.gif') }}" alt="loading" hidden="hidden" id="loadinglevel">
+                                <!-- /.box-body -->
+                            </div>
+                        </div>
+                        <!-- /.tab-pane -->
+                    </div>
+                    <!-- /.tab-content -->
+                </div>
+                <!-- nav-tabs-custom -->
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    <script>
+        window.onload = function () {
+            getComp();
+            getAxis();
+            getScope();
+            _get('list_composant','','composants','loadingComp');
+        };
+        function getComp() {
+            _get('composant_list','', 'composant');
+        }
+        function getAxis() {
+            _get('axis_lists','','axe');
+        }
+        function getScope() {
+            _get('node_list','','scope');
+        }
+
+    </script>
+{% endblock %}

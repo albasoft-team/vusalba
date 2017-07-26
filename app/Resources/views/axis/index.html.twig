@@ -1,0 +1,33 @@
+
+    <table id="axesid" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Groupe</th>
+                <th>Iscalculated</th>
+                <th>Formula</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for axi in axes %}
+            <tr>
+                <td><a href="{{ path('axis_show', { 'id': axi.id }) }}">{{ axi.id }}</a></td>
+                <td>{{ axi.name }}</td>
+                <td>{{ axi.description }}</td>
+                <td>{{ axi.groupe }}</td>
+                <td>{% if axi.iscalculated %}Yes{% else %}No{% endif %}</td>
+                <td>{{ axi.formula }}</td>
+                <td>
+                    <a class="btn-sm btn btn-success" href="{{ path('axis_edit', { 'id': axi.id }) }}"><i class="glyphicon glyphicon-pencil"></i></a>
+                    {#<a href="{{ path('axis_show', { 'id': axi.id }) }}">show</a>#}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <script>
+        $("#axesid").DataTable();
+    </script>
