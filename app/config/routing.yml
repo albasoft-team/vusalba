@@ -1,3 +1,6 @@
+app:
+    resource: '@AppBundle/Controller/'
+    type: annotation
 user:
     resource: "@UserBundle/Controller/"
     type:     annotation
@@ -25,9 +28,6 @@ vue_analyze:
 vue_admin:
     resource: "@VueBundle/Controller/AdminController.php"
     type:     annotation
-app:
-    resource: '@AppBundle/Controller/'
-    type: annotation
 vue:
     resource: "@VueBundle/Resources/config/routing.yml"
     prefix:   /
