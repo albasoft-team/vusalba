@@ -9,19 +9,20 @@
             <div class="row">
                 <div class="col-md-4">
                     <div id="composant" class="form-group">
-                        <img src="{{ asset('img/minload.gif') }}" alt="loading"  id="minloadComp">
+                        <img style="width: 15%; margin-left: auto; margin-right: auto; display: block" src="{{ asset('img/ajax-loader.gif') }}" alt="loading"  id="minloadComp">
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div id="axe" class="form-group">
-
+                        <img style="width: 15%; margin-left: auto; margin-right: auto; display: block" src="{{ asset('img/ajax-loader.gif') }}" alt="loading"  id="minloadAxe">
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div id="scope" class="form-group">
-
+                        <img style="width: 15%; margin-left: auto; margin-right: auto; display: block" src="{{ asset('img/ajax-loader.gif') }}" alt="loading"  id="minloadNode">
                     </div>
                 </div>
+
                 <!-- /.col -->
                 <!-- /.col -->
             </div>
@@ -110,7 +111,7 @@
                     <ul class="nav nav-tabs">
                         <li class="active"><a href="#tab_1" onclick="_get('list_composant','','composants','loadingComp')" data-toggle="tab">Composants</a></li>
                         <li><a href="#tab_2" onclick="_get('list_axe','','axes','loadingaxe')" data-toggle="tab">Axes</a></li>
-                        <li><a href="#tab_3" onclick="_get('list_node','','nodes','loadingaxe')" data-toggle="tab">Noeuds</a></li>
+                        <li><a href="#tab_3" onclick="_get('list_node','','nodes','loadingnoeud')" data-toggle="tab">Noeuds</a></li>
                         <li><a href="#tab_4" onclick="_get('list_level','','levels','loadinglevel')" data-toggle="tab">Niveaux</a></li>
                         <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
                     </ul>
@@ -122,8 +123,8 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body" id="composants">
-                                    <img src="{{ asset('img/minload.gif') }}" alt="loading" id="loadingComp">
                                 </div>
+                                <img style="width: 20%; margin-left: auto; margin-right: auto; display: block" src="{{ asset('img/ajax-loader.gif') }}" alt="loading"   id="loadingComp2">
                                 <!-- /.box-body -->
                             </div>
 
@@ -136,8 +137,8 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body" id="axes">
-                                    <img src="{{ asset('img/minload.gif') }}" alt="loading" id="loadingaxe">
                                 </div>
+                                <img style="width: 20%; margin-left: auto; margin-right: auto; display: block" src="{{ asset('img/ajax-loader.gif') }}" alt="loading" id="loadingaxe">
                                 <!-- /.box-body -->
                             </div>
                         </div>
@@ -150,7 +151,7 @@
                                 <!-- /.box-header -->
                                 <div class="box-body" id="nodes">
                                 </div>
-                                <img src="{{ asset('img/minload.gif') }}" alt="loading" hidden="hidden" id="loadingaxe">
+                                <img style="width: 20%; margin-left: auto; margin-right: auto; display: block" src="{{ asset('img/ajax-loader.gif') }}" alt="loading" id="loadingnoeud">
                                 <!-- /.box-body -->
                             </div>
                         </div>
@@ -162,7 +163,7 @@
                                 <!-- /.box-header -->
                                 <div class="box-body" id="levels">
                                 </div>
-                                <img src="{{ asset('img/minload.gif') }}" alt="loading" hidden="hidden" id="loadinglevel">
+                                <img style="width: 20%; margin-left: auto; margin-right: auto; display: block" src="{{ asset('img/ajax-loader.gif') }}" alt="loading" id="loadinglevel">
                                 <!-- /.box-body -->
                             </div>
                         </div>
@@ -182,16 +183,16 @@
             getComp();
             getAxis();
             getScope();
-            _get('list_composant','','composants','loadingComp');
+            _get('list_composant','','composants','loadingComp2');
         };
         function getComp() {
-            _get('composant_list','', 'composant');
+            _get('composant_list','', 'composant', 'loadingComp');
         }
         function getAxis() {
-            _get('axis_lists','','axe');
+            _get('axis_lists','','axe','loadingAxe');
         }
         function getScope() {
-            _get('node_list','','scope');
+            _get('node_list','','scope','loadingNode');
         }
 
     </script>

@@ -131,19 +131,12 @@ class NodeController extends Controller
             $this->getDoctrine()
                 ->getManager()
                 ->flush();
-
-//            return $this->redirectToRoute('node_edit', array('id' => $node->getId()));
         }
-        $view =  $this->renderView(':node:edit.html.twig', ['form' => $editForm->createView()]);
+        $view =  $this->renderView(':node:edit.html.twig', ['form' => $editForm->createView(), 'id'=>$id]);
         return New JsonResponse([
             'view' => $view,
             'error' => $errors
         ]);
-//        return $this->render('node/edit.html.twig', array(
-//            'node' => $node,
-//            'edit_form' => $editForm->createView(),
-//            'delete_form' => $deleteForm->createView(),
-//        ));
     }
 
     private function findNodeById($id) {

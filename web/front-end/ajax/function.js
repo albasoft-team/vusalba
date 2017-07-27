@@ -18,7 +18,6 @@ function _display(s) {
 /** Hide un element  **/
 function _hide(s) {
     jQuery(_setSelectorId(s)).hide();
-    console.log(_setSelectorId(s));
 }
 /**
  * Permet de récupérer la bonne url à envoyer dans la requête ajax

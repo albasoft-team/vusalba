@@ -14,11 +14,11 @@ function showAxeForm() {
     _showModal('frmAxeModal');
 }
 function updateLevel(id) {
-    _get('level_edit',id,'contentModalLevel'+id)
+    _get('level_edit',id,'contentModalLevel'+id);
     _showModal('frmUpdateLevel'+id);
 }
 function updateNode(id) {
-    _get('node_edit',id,'contentModalNode'+id);
+    _get('node_edit',id,'contentModalNode'+id,'editloading');
     _showModal('frmUpdateNode'+id);
 }
 function updates(route,id,contentModal,modalId,loding) {
@@ -28,7 +28,7 @@ function updates(route,id,contentModal,modalId,loding) {
 function _get(route, id, contentId,lodingId) {
     if(route){
         _empty(contentId);
-        _display(lodingId);
+        _display(lodingId+id);
         var url = getUrl(route,id);
         $.ajax({
             type: 'GET',
@@ -36,13 +36,9 @@ function _get(route, id, contentId,lodingId) {
             success: function(response)
             {
                 if(response.error == null){
-                    _hide(lodingId);
+                    _hide(lodingId+id);
                     _empty(contentId);
-                    console.log(contentId);
                     _setHtmlValue(contentId, response.view);
-                    // if (_getHtmlValue('editLevel') !== '') {
-                    //     $('#idLevel').attr('value', id);
-                    // }
                     if (_getHtmlValue('frmAxeModal') !== '')
                     {
                         if (response.axis && response.axis.length == 0) {
@@ -73,10 +69,25 @@ function addAxe() {
     });
 
 }
+
+/**
+ * Modification d'un niveau
+ * @param id
+ */
 function editLevel(id) {
     _post('level_edit','editLevel','','loadingLevel','flashErrorFrom',function () {
         _get('list_level','','levels','loadinglevel');
     },id)
+}
+
+/**
+ * Modification d'un noeud
+ * @param id
+ */
+function editNode(id) {
+    _post('node_edit','editNode','','loadingScope','flashErrorFrom', function () {
+        _get('list_node','','nodes','loadingnoeud');
+    }, id)
 }
 function addScope() {
     _post('node_new', 'ScopeForm', 'frmScopeModal', 'loadingScope', 'flashErrorFrom', function () {
@@ -89,14 +100,12 @@ function _post(route, formId,  modal, loading, flashError, callback,id) {
     $('#vusalba_vuebundle_axis_formula').removeAttr('disabled');
     var url = getUrl(route,id);
     if (route) {
-        // console.log(_serializeForm(formId));
         $.ajax({
             type: 'POST',
             url : url,
             data : _serializeForm(formId),
             success: function(response)
             {
-                console.log(response);
                 if(response.error == null){
                     _hide(loading);
                     // On peut exécuter tout ce que l'on veut dans le fn callback
@@ -111,7 +120,6 @@ function _post(route, formId,  modal, loading, flashError, callback,id) {
                 else showErrorResponse(response, flashError)
             },
             error: function(response){
-                console.log(response);
                 // alert('Error : '+ response.error);
             }
         })
