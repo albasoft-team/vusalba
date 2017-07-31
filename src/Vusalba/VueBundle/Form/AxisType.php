@@ -2,6 +2,7 @@
 
 namespace Vusalba\VueBundle\Form;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,7 +17,13 @@ class AxisType extends AbstractType
     {
         $builder->add('name')
             ->add('description')
-            ->add('groupe', TextType::class, ['required' => false])
+            ->add('groupe', EntityType::class, array(
+                'class' => 'Vusalba\VueBundle\Entity\AxeGroupe',
+                'choice_label' => 'name',
+                'required' => false,
+                'empty_data' => null,
+                'preferred_choices' => array()
+            ))
             ->add('iscalculated')
             ->add('formula');
     }

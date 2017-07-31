@@ -1,3 +1,7 @@
+vue_axe_groupe:
+    resource: "@VueBundle/Controller/AxeGroupeController.php"
+    type:     annotation
+
 vue_groupe:
     resource: "@VueBundle/Controller/GroupeController.php"
     type:     annotation

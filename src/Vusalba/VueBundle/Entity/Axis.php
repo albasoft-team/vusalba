@@ -36,9 +36,9 @@ class Axis
     private $description;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="groupe", type="string", length=255, nullable=true)
+     * @var AxeGroupe
+     * @ORM\ManyToOne(targetEntity="Vusalba\VueBundle\Entity\AxeGroupe")
+     * @ORM\JoinColumn(name="axegroupe_id", referencedColumnName="id")
      */
     private $groupe;
 
@@ -114,29 +114,6 @@ class Axis
         return $this->description;
     }
 
-    /**
-     * Set groupe
-     *
-     * @param string $groupe
-     *
-     * @return Axis
-     */
-    public function setGroupe($groupe)
-    {
-        $this->groupe = $groupe;
-
-        return $this;
-    }
-
-    /**
-     * Get groupe
-     *
-     * @return string
-     */
-    public function getGroupe()
-    {
-        return $this->groupe;
-    }
 
     /**
      * Set iscalculated
@@ -184,5 +161,29 @@ class Axis
     public function getFormula()
     {
         return $this->formula;
+    }
+
+    /**
+     * Set groupe
+     *
+     * @param \Vusalba\VueBundle\Entity\AxeGroupe $groupe
+     *
+     * @return Axis
+     */
+    public function setGroupe(\Vusalba\VueBundle\Entity\AxeGroupe $groupe = null)
+    {
+        $this->groupe = $groupe;
+
+        return $this;
+    }
+
+    /**
+     * Get groupe
+     *
+     * @return \Vusalba\VueBundle\Entity\AxeGroupe
+     */
+    public function getGroupe()
+    {
+        return $this->groupe;
     }
 }

@@ -19,7 +19,10 @@ class ComposantType extends AbstractType
             ->add('description')
             ->add('groupe', EntityType::class, array(
                 'class' => 'Vusalba\VueBundle\Entity\Groupe',
-                'choice_label' => 'name'
+                'choice_label' => 'name',
+                'required' => false,
+                'empty_data' => null,
+                'preferred_choices' => array()
             ));
     }
     

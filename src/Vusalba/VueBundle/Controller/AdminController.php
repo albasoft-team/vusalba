@@ -112,4 +112,20 @@ class AdminController extends Controller
             'error' => null
         ]);
     }
+     /**
+     * @return JsonResponse
+     * @Route("/axegroupe/list", name="list_axegroup", options={"expose"=true})
+     * @Method("GET")
+     */
+    public function getAxeGroupe() {
+        $em = $this->getDoctrine()->getManager();
+        $groups = $em->getRepository('VueBundle:AxeGroupe')->findAll();
+        $view = $this->renderView(':axegroupe:index.html.twig',['axeGroupes' => $groups]);
+
+        return new JsonResponse([
+            'view' => $view,
+            'error' => null
+        ]);
+    }
+
 }

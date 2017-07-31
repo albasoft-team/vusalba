@@ -17,6 +17,10 @@ function showGroupCompForm() {
     _get('groupe_new','','contentGroupModalComp','');
     _showModal('frmGroupCompModal');
 }
+function showGroupAxegroupForm() {
+    _get('axegroupe_new','','contentGroupModalAxe','');
+    _showModal('frmGroupAxeModal');
+}
 function updateLevel(id) {
     _get('level_edit',id,'contentModalLevel'+id);
     _showModal('frmUpdateLevel'+id);
@@ -80,6 +84,11 @@ function addAxe() {
 function addGroupComp() {
     _post('groupe_new', 'addgroupComp', 'frmGroupCompModal', 'loadingComp', 'flashErrorFrom',function () {
         _get('group_list','', 'groupeComp');
+    });
+}
+function addAxeGroup() {
+    _post('axegroupe_new', 'addAxegroup', 'frmGroupAxeModal', 'loadingComp', 'flashErrorFrom',function () {
+        _get('axegroupe_list','', 'groupeAxe');
     });
 }
 /**

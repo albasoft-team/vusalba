@@ -17,7 +17,7 @@
                 <td><a href="{{ path('axis_show', { 'id': axi.id }) }}">{{ axi.id }}</a></td>
                 <td>{{ axi.name }}</td>
                 <td>{{ axi.description }}</td>
-                <td>{{ axi.groupe }}</td>
+                <td>{% if axi.groupe %}{{ axi.groupe.name }}{% endif %}</td>
                 <td>{% if axi.iscalculated %}Yes{% else %}No{% endif %}</td>
                 <td>{{ axi.formula }}</td>
                 <td>
