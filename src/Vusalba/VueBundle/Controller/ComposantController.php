@@ -41,8 +41,7 @@ class ComposantController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $composants = $em->getRepository('VueBundle:Composant')->findAll();
-//        $serializer = $this->get('serializer');
-//        $arrayResult = $serializer->normalize($composants);
+
         $view = $this->renderView(':admin:composant.html.twig',['composants' => $composants]);
 
         return new JsonResponse([

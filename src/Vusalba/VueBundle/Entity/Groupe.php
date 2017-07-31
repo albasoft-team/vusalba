@@ -5,12 +5,12 @@ namespace Vusalba\VueBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Composant
+ * Groupe
  *
- * @ORM\Table(name="composant")
- * @ORM\Entity(repositoryClass="Vusalba\VueBundle\Repository\ComposantRepository")
+ * @ORM\Table(name="Groupe")
+ * @ORM\Entity(repositoryClass="Vusalba\VueBundle\Repository\GroupeRepository")
  */
-class Composant
+class Groupe
 {
     /**
      * @var int
@@ -31,17 +31,9 @@ class Composant
     /**
      * @var string
      *
-     * @ORM\Column(name="description", type="string", length=255)
+     * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
-
-    /**
-     * @var Groupe
-     * @ORM\ManyToOne(targetEntity="Vusalba\VueBundle\Entity\Groupe")
-     * @ORM\JoinColumn(name="groupe_id", referencedColumnName="id")
-     */
-    private $groupe;
-
 
 
     /**
@@ -59,7 +51,7 @@ class Composant
      *
      * @param string $name
      *
-     * @return Composant
+     * @return groupe
      */
     public function setName($name)
     {
@@ -83,7 +75,7 @@ class Composant
      *
      * @param string $description
      *
-     * @return Composant
+     * @return groupe
      */
     public function setDescription($description)
     {
@@ -100,30 +92,5 @@ class Composant
     public function getDescription()
     {
         return $this->description;
-    }
-
-
-    /**
-     * Set groupe
-     *
-     * @param \Vusalba\VueBundle\Entity\Groupe $groupe
-     *
-     * @return Composant
-     */
-    public function setGroupe(\Vusalba\VueBundle\Entity\Groupe $groupe = null)
-    {
-        $this->groupe = $groupe;
-
-        return $this;
-    }
-
-    /**
-     * Get groupe
-     *
-     * @return \Vusalba\VueBundle\Entity\Groupe
-     */
-    public function getGroupe()
-    {
-        return $this->groupe;
     }
 }

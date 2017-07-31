@@ -15,7 +15,7 @@
                 <td><a href="{{ path('composant_show', { 'id': composant.id }) }}">{{ composant.id }}</a></td>
                 <td>{{ composant.name }}</td>
                 <td>{{ composant.description }}</td>
-                <td>{{ composant.groupe }}</td>
+                <td>{% if composant.groupe %}{{ composant.groupe.name }}{% endif %}</td>
                 <td>
                         {#<li>#}
                             {#<a href="{{ path('composant_show', { 'id': composant.id }) }}"><i ></i></a>#}

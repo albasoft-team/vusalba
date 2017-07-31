@@ -13,6 +13,10 @@ function showAxeForm() {
     _get('axis_new','','contentModalAxe','minloadAxe');
     _showModal('frmAxeModal');
 }
+function showGroupCompForm() {
+    _get('groupe_new','','contentGroupModalComp','');
+    _showModal('frmGroupCompModal');
+}
 function updateLevel(id) {
     _get('level_edit',id,'contentModalLevel'+id);
     _showModal('frmUpdateLevel'+id);
@@ -20,6 +24,10 @@ function updateLevel(id) {
 function updateNode(id) {
     _get('node_edit',id,'contentModalNode'+id,'editloading');
     _showModal('frmUpdateNode'+id);
+}
+function updateAxe(id) {
+    _get('axis_edit',id,'contentModalAxe'+id,'editloading');
+    _showModal('frmUpdateAxe'+id);
 }
 function updates(route,id,contentModal,modalId,loding) {
  _get(route, id, contentModal+id);
@@ -48,8 +56,8 @@ function _get(route, id, contentId,lodingId) {
                 }
                 else showErrorResponse(response, 'flashError')
             },
-            error: function(){
-                alert('Veuillez ressayer plus tard');
+            error: function(response){
+                alert(response.error);
             }
         })
     }
@@ -69,7 +77,11 @@ function addAxe() {
     });
 
 }
-
+function addGroupComp() {
+    _post('groupe_new', 'addgroupComp', 'frmGroupCompModal', 'loadingComp', 'flashErrorFrom',function () {
+        _get('group_list','', 'groupeComp');
+    });
+}
 /**
  * Modification d'un niveau
  * @param id
@@ -87,6 +99,16 @@ function editLevel(id) {
 function editNode(id) {
     _post('node_edit','editNode','','loadingScope','flashErrorFrom', function () {
         _get('list_node','','nodes','loadingnoeud');
+    }, id)
+}
+
+/**
+ * Modification d'un axe
+ * @param id
+ */
+function editAxe(id) {
+    _post('axis_edit','editAxe','','loadingScope','flashErrorFrom', function () {
+        _get('list_axe','','axes','loadingaxe');
     }, id)
 }
 function addScope() {
@@ -114,6 +136,7 @@ function _post(route, formId,  modal, loading, flashError, callback,id) {
                     if (_getHtmlValue('frmAxeModal') !== '') { $('#closeAxe').click();}
                     if (_getHtmlValue('frmScopeModal') !== '') { $('#closeScope').click();}
                     if (_getHtmlValue('frmUpdateLevel'+id) !== '') { $('#' + 'closeLevel'+id).click();}
+                    if (_getHtmlValue('frmUpdateAxe'+id) !== '') { $('#' + 'closeAxe'+id).click();}
 
                     callback();
                 }

@@ -140,26 +140,36 @@ class AxisController extends Controller
     /**
      * Displays a form to edit an existing axi entity.
      *
-     * @Route("/{id}/edit", name="axis_edit")
+     * @Route("/{id}/edit", name="axis_edit", options={"expose"=true})
      * @Method({"GET", "POST"})
      */
-    public function editAction(Request $request, Axis $axi)
+    public function editAction(Request $request, $id)
     {
-        $deleteForm = $this->createDeleteForm($axi);
-        $editForm = $this->createForm('Vusalba\VueBundle\Form\AxisType', $axi);
-        $editForm->handleRequest($request);
+//        $deleteForm = $this->createDeleteForm($axi);
+        $axi = $this->findAxeById($id);
+        $errors = null;
+        try{
+            $editForm = $this->createForm('Vusalba\VueBundle\Form\AxisType', $axi);
+            $editForm->handleRequest($request);
 
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            if ($editForm->isSubmitted() && $editForm->isValid()) {
+                $this->getDoctrine()->getManager()->flush();
+            }
+            $view =  $this->renderView(':axis:edit.html.twig', ['form' => $editForm->createView(), 'id'=>$id]);
 
-            return $this->redirectToRoute('axis_edit', array('id' => $axi->getId()));
+        }catch (\Exception $exception) {
+            $errors = $exception->getMessage();
         }
+       return New JsonResponse([
+            'view' => $view,
+            'error' => $errors
+        ]);
 
-        return $this->render('axis/edit.html.twig', array(
-            'axi' => $axi,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
+//        return $this->render('axis/edit.html.twig', array(
+//            'axi' => $axi,
+//            'edit_form' => $editForm->createView(),
+//            'delete_form' => $deleteForm->createView(),
+//        ));
     }
 
     /**
@@ -196,5 +206,14 @@ class AxisController extends Controller
             ->setMethod('DELETE')
             ->getForm()
         ;
+    }
+
+    private function findAxeById($id)
+    {
+        $axe = $this->getDoctrine()
+            ->getManager()
+            ->getRepository('VueBundle:Axis')
+            ->find($id);
+        return $axe;
     }
 }

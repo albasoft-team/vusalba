@@ -97,5 +97,19 @@ class AdminController extends Controller
         ]);
     }
 
+    /**
+     * @return JsonResponse
+     * @Route("/groupe/list", name="list_group", options={"expose"=true})
+     * @Method("GET")
+     */
+    public function getGroupe() {
+        $em = $this->getDoctrine()->getManager();
+        $groups = $em->getRepository('VueBundle:Groupe')->findAll();
+        $view = $this->renderView(':groupe:index.html.twig',['groupes' => $groups]);
 
+        return new JsonResponse([
+            'view' => $view,
+            'error' => null
+        ]);
+    }
 }
