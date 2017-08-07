@@ -157,3 +157,37 @@ function _post(route, formId,  modal, loading, flashError, callback,id) {
         })
     }
 }
+
+function createEntity(loading) {
+    // $('.modal-backdrop').attr('id', 'modalClose');
+    $('#loader').css('display', 'block');
+    $.ajax({
+        type: 'POST',
+        url: Routing.generate('create_entity'),
+        data : {},
+        success : function (response) {
+            $('#loader').css('display', 'none');
+            // $('#finalId').css('display', 'block');
+            console.log(response);
+        },
+        error : function (response) {
+            console.log(response);
+        }
+    });
+}
+function générateAll() {
+    $('#loader').css('display', 'block');
+    $.ajax({
+        type: 'POST',
+        url: Routing.generate('generate_all'),
+        data : {},
+        success : function (response) {
+            $('#loader').css('display', 'none');
+            // $('#finalId').css('display', 'none');
+            console.log(response);
+        },
+        error : function (response) {
+            console.log(response);
+        }
+    });
+}

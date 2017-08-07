@@ -32,18 +32,18 @@ class AxisController extends Controller
             'axes' => $axes,
         ));
     }
-//    /**
-// * @Route("/axe/list", name="axis_list", options={"expose" = true})
-// * @Method("GET")
-// */
-//    public function listAxes() {
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $composants = $em->getRepository('VueBundle:Axis')->findAll();
-//        $serializer = $this->get('serializer');
-//        $arrayResult = $serializer->normalize($composants);
-//        return new JsonResponse($arrayResult);
-//    }
+    /**
+ * @Route("/allAxis", name="all_axis", options={"expose" = true})
+ * @Method("GET")
+ */
+    public function listAxes() {
+        $em = $this->getDoctrine()->getManager();
+
+        $composants = $em->getRepository('VueBundle:Axis')->findAll();
+        $serializer = $this->get('serializer');
+        $arrayResult = $serializer->normalize($composants);
+        return new JsonResponse($arrayResult);
+    }
     /**
      * @Route("/axe/lists", name="axis_lists", options={"expose" = true})
      * @Method("GET")

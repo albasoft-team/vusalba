@@ -1,4 +1,7 @@
 services:
-#    vue.example:
-#        class: Vusalba\VueBundle\Example
-#        arguments: ["@service_id", "plain_value", "%parameter%"]
+    commande:
+        class: Vusalba\VueBundle\Service\Commande
+        calls:
+            - [setContainer, ["@service_container"] ]
+    createQuery:
+        class: Vusalba\VueBundle\Service\CreateQuery

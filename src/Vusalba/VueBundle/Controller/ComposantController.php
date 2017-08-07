@@ -33,6 +33,21 @@ class ComposantController extends Controller
         ));
     }
 
+
+    /**
+     * @return JsonResponse
+     * @Route("/allComp", name="all_comp", options={"expose" = true})
+     * @Method("GET")
+     */
+    public function getComposants() {
+        $em = $this->getDoctrine()->getManager();
+        $composants = $em->getRepository('VueBundle:Composant')->findAll();
+        $serializer = $this->get('serializer');
+        $arrayResult = $serializer->normalize($composants);
+
+        return new JsonResponse($arrayResult);
+
+    }
     /**
      * @Route("/composant/list", name="composant_list", options={"expose" = true})
      * @Method("GET")

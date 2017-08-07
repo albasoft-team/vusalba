@@ -4,22 +4,27 @@ vusalbaApp.controller('composantController',['$scope','$rootScope','composantSer
         $scope.allAxis = [];
         $scope.operateur = '';
         $scope.axe = '';
-    $scope.getComposants = function () {
+    $scope.getComposants = function (loading) {
+        _show(loading);
         composantService.getAll()
             .then(function (response) {
-                if (response.data) {
-                    $scope.allComposants = response.data;
-                }
+                _hide(loading);
+                console.log(response);
+                // if (response.data) {
+                //     $scope.allComposants = response.data;
+                // }
             }, function (msg) {
                 alert(msg);
             });
     };
     
-    $scope.getAxis = function () {
+    $scope.getAxes = function (loading) {
+        _show(loading);
         composantService.getAllAxis()
             .then(function (response) {
-                console.log(response);
-                    $scope.allAxis = response.data;
+                _hide(loading);
+              //  console.log(response);
+                  //  $scope.allAxis = response.data;
             }, function (msg) {
                 alert(msg);
             })
@@ -39,5 +44,15 @@ vusalbaApp.controller('composantController',['$scope','$rootScope','composantSer
     });
     $scope.createScope = function () {
         showNodeForm();
+    }
+    $scope.createEntity = function (loadind) {
+        _showModal(loadind);
+        composantService.createEntity()
+            .then(function (response) {
+                _hide(loadind);
+                console.log(response);
+            }, function (msg) {
+                alert(msg);
+            })
     }
 }]);

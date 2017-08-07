@@ -9,10 +9,21 @@
 namespace Vusalba\VueBundle\Controller;
 
 
+use Doctrine\DBAL\DriverManager;
+use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Vusalba\VueBundle\Constante\Constante;
+use Vusalba\VueBundle\Constante\Database;
 
 
 /**
@@ -36,6 +47,13 @@ class AdminController extends Controller
         ));
     }
 
+    /**
+     * @Route("/genener_table", name="admin_inputtable")
+     * @Method("GET")
+     */
+    public function adminAction() {
+        return $this->render('admin/admin.html.twig');
+    }
     /**
      * @return JsonResponse
      * @Route("/comp/list", name="list_composant", options={"expose"=true})
@@ -126,6 +144,141 @@ class AdminController extends Controller
             'view' => $view,
             'error' => null
         ]);
+    }
+
+    /**
+     * @Route("/properties", name="admin_properties", options={"expose" = true})
+     * @Method("GET")
+     * @return string
+     *
+     */
+    public function getProperties() {
+        $axes =$this->getAxisColumn();
+        $fields = '';
+        $i = 0;
+        foreach ($axes as $axe) {
+            $name = str_replace(' ','', ucwords($axe->getName()));
+            if ($i < count($axes) - 1) {
+                $fields .= '`'.$name.'`'.' '.'FLOAT'. ',';
+            }
+            else {
+                $fields .= '`'.$name.'`'.' '.'FLOAT';
+            }
+            $i++;
+        }
+        return new JsonResponse([
+            'fields' => $fields
+        ]);
+    }
+    /**
+     * @param Request $request
+     * @Route("/entity", name="create_entity", options={"expose" = true})
+     */
+    public function createEntity(Request $request) {
+        $axes =$this->getAxisColumn();
+        $fields = '';
+        $i = 0;
+        $errors = '';
+        foreach ($axes as $axe) {
+            $name = str_replace(' ','', ucwords($axe->getName()));
+            if ($i < count($axes) - 1) {
+                $fields .= '`'.$name.'`'.' '.'FLOAT'. ',';
+            }
+            else {
+                $fields .= '`'.$name.'`'.' '.'FLOAT';
+            }
+            $i++;
+        }
+        $conn = $this->getConnection();
+        $query = Constante::getCreateQuery($fields);
+        $statement = $conn->prepare($query);
+        try {
+            $statement->execute();
+
+            $args = Constante::MAPPING_IMPORT;
+            $response = $this->runCommande($args);
+            if ($response !== '') {
+                $path = 'src\Vusalba\VueBundle\Resources\config\doctrine';
+                $supp = $this->deleteDirectory($path);
+            }
+        }catch (\Exception $exception) {
+            $errors = $exception->getMessage();
+        }
+
+        return new JsonResponse([
+            'result' => $response
+        ]);
+    }
+
+    /**
+     * @Route("/entities", name="generate_all", options={"expose" = true})
+     * @Method("POST")
+     */
+    public function generateEntities() {
+        $argsEntities = Constante::GENERATE_ENTITIES;
+        $entities = $this->runCommande($argsEntities);
+        $this->longTaskAction();
+        $args = Constante::GENERATE_CRUD;
+        var_dump('ici');
+        $this->runCommande($args);
+        var_dump('lallalla');
+        return new JsonResponse([
+            'result' => $entities
+        ]);
+    }
+    /**
+     * Delete doctrine directory
+     * @param $dir
+     * @return bool
+     */
+    private function deleteDirectory($dir) {
+        if (!file_exists($dir)) { return true; }
+        if (!is_dir($dir) || is_link($dir)) {
+            return unlink($dir);
+        }
+        $dir .='/';
+        $files = $files = glob($dir . '*', GLOB_MARK);
+        foreach ($files as $item) {
+            if (is_file($item)){unlink($item);}
+        }
+        return rmdir($dir);
+    }
+    private function runCommande($args) {
+        try {
+            $kernel = $this->get('kernel');
+            $app = new Application($kernel);
+            $input = new ArrayInput($args);
+            $output = new NullOutput();
+            $app->doRun($input, $output);
+            $responses = 'Succefully';
+        }catch (\Exception $exception) {
+            $responses = $exception->getMessage();
+            var_dump($responses);
+        }
+
+        return $responses;
+    }
+    private function getConnection() {
+        $config = new \Doctrine\DBAL\Configuration();
+        $params = Database::getDatabase(
+            Constante::DBNAME,
+            Constante::USER,
+            Constante::PASSWORD,
+            Constante::HOST
+            );
+        $conn = DriverManager::getConnection($params, $config);
+       return $conn;
+    }
+    public function longTaskAction()
+    {
+        set_time_limit(0) ;// 0 = no limits
+        // ..
+    }
+    private function getAxisColumn()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $axes = $em->getRepository('VueBundle:Axis')->findAll();
+        return $axes;
     }
 
 }

@@ -1,8 +1,30 @@
 {% extends 'base.html.twig' %}
 {% block analyze %}
-    <div class="box box-default" >
+    <div class="box box-danger" id="loader" style="display: none">
+        <div class="box-header">
+            <h3 class="box-title">Loading state</h3>
+        </div>
+        <div class="box-body">
+            The body of the box
+        </div>
+        <!-- /.box-body -->
+        <!-- Loading (remove the following to stop the loading)-->
+        <div class="overlay">
+            <i class="fa fa-refresh fa-spin"></i>
+        </div>
+        <!-- end loading -->
+    </div>
+    <div class="box box-default">
         <div class="box-header with-border">
             <h3 class="box-title">Préparation des données</h3>
+            <div class="pull-right dropdown">
+                <a id="finalId" onclick="générateAll()" class="btn btn-defaut btn-sm">Finaliser</a>
+                <a href="#" class="text-muted dropdown-toggle" data-toggle="dropdown"><i class="fa fa-gear"></i>
+                </a>
+                <ul class="dropdown-menu adminSetup">
+                    <li><a href="#" onclick="createEntity('loader')">Générer la table de saisie</a></li>
+                </ul>
+            </div>
         </div>
         <!-- /.box-header -->
         <div class="box-body">
@@ -120,7 +142,6 @@
                         <li><a href="#tab_4" onclick="_get('list_level','','levels','loadinglevel')" data-toggle="tab">Niveaux</a></li>
                         <li><a href="#tab_5" onclick="_get('list_group','','groupComp','loadingGroupComp')" data-toggle="tab">Groupe de composants</a></li>
                         <li><a href="#tab_6" onclick="_get('list_axegroup','','groupAxe','loadingGroupAxe')" data-toggle="tab">Groupe d'axes</a></li>
-                        <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane active" id="tab_1">
