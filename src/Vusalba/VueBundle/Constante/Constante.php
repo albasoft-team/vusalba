@@ -7,7 +7,7 @@ class Constante
 {
     const DBNAME = 'vusalba';
     const USER = 'root';
-    const PASSWORD = '';
+    const PASSWORD = 'root';
     const HOST = 'localhost';
     const ORM_PATH = 'src\Vusalba\VueBundle\Resources\config\doctrine';
     const MAPPING_IMPORT = array(
@@ -21,7 +21,8 @@ class Constante
     const MAPPING_CONVERT = array(
         'command' => 'doctrine:mapping:convert',
         'to-type' => 'annotation',
-        'dest-path' => 'C:\wamp64\www\vusalba\src\Vusalba\VueBundle\Entity',
+//        'dest-path' => 'C:\wamp64\www\vusalba\src\Vusalba\VueBundle\Entity',
+        'dest-path' => '/var/www/vusalba/src/Vusalba/VueBundle/Entity',
         '--filter' => 'Inputtable',
         '--no-interaction'
     );
