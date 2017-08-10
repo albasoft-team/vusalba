@@ -9,6 +9,7 @@ class Constante
     const USER = 'root';
     const PASSWORD = '';
     const HOST = 'localhost';
+    const ORM_PATH = 'src\Vusalba\VueBundle\Resources\config\doctrine';
     const MAPPING_IMPORT = array(
         'command' => 'doctrine:mapping:import',
         'bundle' => 'VueBundle',
@@ -32,9 +33,11 @@ class Constante
     const GENERATE_CRUD = array(
         'command' => 'doctrine:generate:crud',
         '--entity' => 'VueBundle:Inputtable',
-        '--no-interaction',
         '--format' => 'annotation',
-        '--with-write' => 'yes'
+        '--no-interaction',
+        '--overwrite',
+        '--no-debug',
+        '--with-write'
     );
     /**
      * @param $fields
@@ -43,10 +46,15 @@ class Constante
    public static function getCreateQuery($fields) {
        $query = "CREATE TABLE IF NOT EXISTS InputTable( `id` INTEGER NOT NULL AUTO_INCREMENT,
                                   `composant_id` INTEGER NULL ,
+                                  `tags` VARCHAR(1000)  NULL ,
                                    $fields,
                                    PRIMARY KEY (`id`),
                                    CONSTRAINT `comp_inputtable_id` FOREIGN KEY (`composant_id`) REFERENCES `composant` (`id`) ON DELETE CASCADE
                                     )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
        return $query;
    }
+
+//   public static function insert($champs, $comp) {
+//       $query = "INSERT INTO `inputtable`".$champs . " VALUES(".$comp.")";
+//   }
 }

@@ -145,6 +145,54 @@ class AdminController extends Controller
             'error' => null
         ]);
     }
+     private function getComposants() {
+         $em = $this->getDoctrine()->getManager();
+         $composants = $em->getRepository('VueBundle:Composant')->findAll();
+         return $composants;
+     }
+     private function createMatrice(\Doctrine\DBAL\Connection $conn) {
+        $comps = $this->getComposants();
+        $axes = $this->getAxisColumn();
+        $json = '';
+        $id = 1;
+        foreach ($comps as $comp) {
+            $json = "{" . '"id"'. ':' . $id . ','.'"compId"'. ':' . $comp->getId() . ',' . '"compName"' . ':"' . $comp->getName() . '","axeValues":[';
+            $i= 0;
+            foreach ($axes as $axe) {
+                if ($i < count($axes) - 1 ) {
+                    $json .= '{'
+                            .'"name"'.':"' . $axe->getName() . '",'
+                            . '"value"' . ':"' . 'vide'.'",'
+                            .'"code"'. ':"'.str_replace(' ','', ucwords($axe->getName())).'",'
+                            .'"calculated"'. ':"'.$axe->getIscalculated().'",'
+                            .'"formule"'. ':"'. $axe->getFormula()
+                            .'"}' .',';
+                }
+                else {
+                    $json .= '{'
+                            .'"name"' . ':"' . $axe->getName() . '",'
+                            . '"value"' . ':"' . 'vide' .'",'
+                            .'" code"'. ':"'.str_replace(' ','', ucwords($axe->getName())).'",'
+                            .'"calculated"'. ':"'.$axe->getIscalculated().'",'
+                            .'"formule"'. ':"'. $axe->getFormula()
+                            .'"}';
+                }
+                $i++;
+            }
+            $json .=']}';
+            try{
+                $conn->insert('inputtable', array(
+                    'composant_id' => $comp->getId(),
+                    'tags' => $json
+                ));
+                $id = $conn->lastInsertId() + 1;
+            }catch (\Exception $exception){
+
+            }
+
+        }
+     }
+
 
     /**
      * @Route("/properties", name="admin_properties", options={"expose" = true})
@@ -153,7 +201,7 @@ class AdminController extends Controller
      *
      */
     public function getProperties() {
-        $axes =$this->getAxisColumn();
+        $axes = $this->getAxisColumn();
         $fields = '';
         $i = 0;
         foreach ($axes as $axe) {
@@ -182,14 +230,15 @@ class AdminController extends Controller
         foreach ($axes as $axe) {
             $name = str_replace(' ','', ucwords($axe->getName()));
             if ($i < count($axes) - 1) {
-                $fields .= '`'.$name.'`'.' '.'FLOAT'. ',';
+                $fields .= '`'.$name.'`'.' '.'FLOAT NULL'. ',';
             }
             else {
-                $fields .= '`'.$name.'`'.' '.'FLOAT';
+                $fields .= '`'.$name.'`'.' '.'FLOAT NULL';
             }
             $i++;
         }
         $conn = $this->getConnection();
+
         $query = Constante::getCreateQuery($fields);
         $statement = $conn->prepare($query);
         try {
@@ -198,9 +247,11 @@ class AdminController extends Controller
             $args = Constante::MAPPING_IMPORT;
             $response = $this->runCommande($args);
             if ($response !== '') {
-                $path = 'src\Vusalba\VueBundle\Resources\config\doctrine';
+                $path = Constante::ORM_PATH;
                 $supp = $this->deleteDirectory($path);
             }
+
+            $this->createMatrice($conn);
         }catch (\Exception $exception) {
             $errors = $exception->getMessage();
         }
@@ -217,11 +268,7 @@ class AdminController extends Controller
     public function generateEntities() {
         $argsEntities = Constante::GENERATE_ENTITIES;
         $entities = $this->runCommande($argsEntities);
-        $this->longTaskAction();
-        $args = Constante::GENERATE_CRUD;
-        var_dump('ici');
-        $this->runCommande($args);
-        var_dump('lallalla');
+
         return new JsonResponse([
             'result' => $entities
         ]);

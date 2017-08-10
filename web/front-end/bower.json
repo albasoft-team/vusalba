@@ -19,6 +19,8 @@
     "angular": "^1.6.5",
     "angular-bootstrap": "^2.5.0",
     "bootstrap": "^3.3.7",
-    "bs-select": "^1.5.0"
+    "bs-select": "^1.5.0",
+    "angular-xeditable": "^0.8.0",
+    "jquery-mask-plugin": "^1.14.11"
   }
 }

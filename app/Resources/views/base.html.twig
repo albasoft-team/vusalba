@@ -27,6 +27,7 @@
         <link rel="stylesheet" href="{{ asset('front-end/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') }}">
         <link rel="stylesheet" href="{{ asset('front-end/dist/css/style.css') }}">
         <link rel="stylesheet" href="{{ asset('bundles/vue/css/mystyle.css') }}">
+        <link rel="stylesheet" href="{{ asset('front-end/bower_components/angular-xeditable/dist/css/xeditable.min.css') }}">
         <style>
             .content {
                 padding-top: 35px!important;
@@ -243,6 +244,7 @@
         {#<script src="{{ asset('front-end/dist/js/pages/dashboard.js') }}"></script>#}
         <script src="{{ asset('front-end/dist/js/demo.js') }}"></script>
         <script src="{{ asset('front-end/bower_components/bs-select/js/bootstrap-select.min.js') }}"></script>
+        <script src="{{ asset('front-end/bower_components/jquery-mask-plugin/dist/jquery.mask.min.js') }}"></script>
 
         <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
         <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
@@ -250,11 +252,17 @@
         <script src="{{ asset('front-end/ajax/function.js') }}"></script>
         <script src="{{ asset('front-end/bower_components/angular/angular.min.js') }}"></script>
         <script src="{{ asset('front-end/app.js') }}"></script>
+
         <script src="{{ asset('front-end/service/composant.js') }}"></script>
+        <script src="{{ asset('front-end/service/enterDataService.js') }}"></script>
+
         <script src="{{ asset('front-end/controller/composant.js') }}"></script>
+        <script src="{{ asset('front-end/controller/enterData.js') }}"></script>
+
         <script src="{{ asset('front-end/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js') }}"></script>
         <script src="{{ asset('front-end/bower_components/angular-bootstrap/ui-bootstrap.min.js') }}"></script>
 
         <script src="{{ asset('bundles/vue/js/wizard.js') }}"></script>
+        <script src="{{ asset('front-end/bower_components/angular-xeditable/dist/js/xeditable.min.js') }}"></script>
     </body>
 </html>

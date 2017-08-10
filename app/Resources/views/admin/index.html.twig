@@ -15,15 +15,19 @@
         <!-- end loading -->
     </div>
     <div class="box box-default">
-        <div class="box-header with-border">
+        <div class="box-header with-border" ng-controller="enterDataController">
             <h3 class="box-title">Préparation des données</h3>
+
             <div class="pull-right dropdown">
-                <a id="finalId" onclick="générateAll()" class="btn btn-defaut btn-sm">Finaliser</a>
                 <a href="#" class="text-muted dropdown-toggle" data-toggle="dropdown"><i class="fa fa-gear"></i>
                 </a>
                 <ul class="dropdown-menu adminSetup">
-                    <li><a href="#" onclick="createEntity('loader')">Générer la table de saisie</a></li>
+                    <li ng-if="!iscreated"><a style="color: white" id="generateId" href="#" class="btn btn-primary btn-sm" onclick="createEntity('loader')">Générer</a></li>
+                    <li ng-if="iscreated"  id="updateId"><a style="color: white" href="#" class="btn btn-primary btn-sm">Mis à jour</a></li>
                 </ul>
+            </div>
+            <div class="pull-right" id="finalId" hidden="hidden">
+                <a href="#" onclick="générateAll()" style="padding: 15px" class="text-muted">Finaliser</a>
             </div>
         </div>
         <!-- /.box-header -->

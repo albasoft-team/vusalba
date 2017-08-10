@@ -167,6 +167,9 @@ function createEntity(loading) {
         data : {},
         success : function (response) {
             $('#loader').css('display', 'none');
+            _show('finalId');
+            // _hide('generateId');
+            // _show('updateId');
             // $('#finalId').css('display', 'block');
             console.log(response);
         },
@@ -184,7 +187,7 @@ function générateAll() {
         success : function (response) {
             $('#loader').css('display', 'none');
             // $('#finalId').css('display', 'none');
-            console.log(response);
+            window.location.href = Routing.generate('enter_index');
         },
         error : function (response) {
             console.log(response);
