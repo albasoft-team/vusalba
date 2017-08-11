@@ -41,7 +41,7 @@ class EnterDataController extends Controller
      */
     public function getAll() {
         $em = $this->getDoctrine()->getManager();
-        $inputtales = $em->getRepository('VueBundle:Inputtable')->findAll();
+        $inputtales = $em->getRepository('VueBundle:InputTable')->findAll();
         $serializer = $this->get('serializer');
         $arrayResult = $serializer->normalize($inputtales);
 
@@ -59,7 +59,7 @@ class EnterDataController extends Controller
         $id = $data['id'];
         $em = $this->getDoctrine()->getManager();
 
-        $inputTable = $em->getRepository('VueBundle:Inputtable')->find($id);
+        $inputTable = $em->getRepository('VueBundle:InputTable')->find($id);
         $inputTable->setTags($tags);
         $em->flush();
 

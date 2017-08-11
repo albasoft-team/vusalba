@@ -2,10 +2,10 @@
 {% block analyze %}
     <div class="box box-danger" id="loader" style="display: none">
         <div class="box-header">
-            <h3 class="box-title">Loading state</h3>
+            <h3 class="box-title">Etat de traitement</h3>
         </div>
         <div class="box-body">
-            The body of the box
+            En cours de traitement ...
         </div>
         <!-- /.box-body -->
         <!-- Loading (remove the following to stop the loading)-->
@@ -23,7 +23,7 @@
                 </a>
                 <ul class="dropdown-menu adminSetup">
                     <li ng-if="!iscreated"><a style="color: white" id="generateId" href="#" class="btn btn-primary btn-sm" onclick="createEntity('loader')">Générer</a></li>
-                    <li ng-if="iscreated"  id="updateId"><a style="color: white" href="#" class="btn btn-primary btn-sm">Mis à jour</a></li>
+                    <li ng-if="iscreated" style="padding-top: 10px" id="updateId"><a style="color: white;" href="#" ng-click="updataInputTable()" class="btn btn-primary btn-sm">Mis à jour</a></li>
                 </ul>
             </div>
             <div class="pull-right" id="finalId" hidden="hidden">

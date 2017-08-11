@@ -153,41 +153,56 @@ class AdminController extends Controller
      private function createMatrice(\Doctrine\DBAL\Connection $conn) {
         $comps = $this->getComposants();
         $axes = $this->getAxisColumn();
+        $tables = [];
         $json = '';
         $id = 1;
         foreach ($comps as $comp) {
-            $json = "{" . '"id"'. ':' . $id . ','.'"compId"'. ':' . $comp->getId() . ',' . '"compName"' . ':"' . $comp->getName() . '","axeValues":[';
-            $i= 0;
-            foreach ($axes as $axe) {
-                if ($i < count($axes) - 1 ) {
-                    $json .= '{'
+            $exist = false;
+            if (count($tables) >  0) {
+                foreach ($tables as $table) {
+                    if ($comp->getId() == $table->getComposant()->getId()) {
+                        $exist = true ;
+                    }
+                }
+            }
+            if ($exist == false) {
+                $json = "{" . '"id"'. ':' . $id . ','.'"compId"'. ':' . $comp->getId() . ',' . '"compName"' . ':"' . $comp->getName() . '","axeValues":[';
+                $i= 0;
+                foreach ($axes as $axe) {
+                    if ($i < count($axes) - 1 ) {
+                        $json .= '{'
                             .'"name"'.':"' . $axe->getName() . '",'
                             . '"value"' . ':"' . 'vide'.'",'
                             .'"code"'. ':"'.str_replace(' ','', ucwords($axe->getName())).'",'
                             .'"calculated"'. ':"'.$axe->getIscalculated().'",'
                             .'"formule"'. ':"'. $axe->getFormula()
                             .'"}' .',';
-                }
-                else {
-                    $json .= '{'
+                    }
+                    else {
+                        $json .= '{'
                             .'"name"' . ':"' . $axe->getName() . '",'
                             . '"value"' . ':"' . 'vide' .'",'
                             .'" code"'. ':"'.str_replace(' ','', ucwords($axe->getName())).'",'
                             .'"calculated"'. ':"'.$axe->getIscalculated().'",'
                             .'"formule"'. ':"'. $axe->getFormula()
                             .'"}';
+                    }
+                    $i++;
                 }
-                $i++;
-            }
-            $json .=']}';
-            try{
-                $conn->insert('inputtable', array(
-                    'composant_id' => $comp->getId(),
-                    'tags' => $json
-                ));
-                $id = $conn->lastInsertId() + 1;
-            }catch (\Exception $exception){
+                $json .=']}';
+                try{
 
+                    $conn->insert('input_table', array(
+                        'composant_id' => $comp->getId(),
+                        'tags' => $json
+                    ));
+                    $id = $conn->lastInsertId() + 1;
+                    if ($id > 1) {
+                        $tables = $this->getInputTables();
+                    }
+                }catch (\Exception $exception){
+
+                }
             }
 
         }
@@ -218,6 +233,76 @@ class AdminController extends Controller
             'fields' => $fields
         ]);
     }
+    private function getNewAxe() {
+        $axes = $this->getAxisColumn();
+        $tags = json_decode($this->getJson());
+        $arrayAxes = [];
+        foreach ($axes as $axe) {
+            $exist = false;
+            foreach ($tags->axeValues as $tag) {
+                if ($axe->getName() == $tag->name) {
+                    $exist = true;
+                }
+            }
+            if ($exist == false) {
+                array_push($arrayAxes, array(
+                    'name' => $axe->getName(),
+                    'formule' => $axe->getFormula(),
+                    'calculated' => $axe->getIscalculated()
+                ));
+            }
+        }
+//        var_dump($arrayAxes);
+        return $arrayAxes;
+    }
+
+    /**
+     * @param Request $request
+     * @Route("/update", name="update_tags", options={"expose"=true})
+     * @Method("POST")
+     */
+    public function updateInputTable(Request $request) {
+
+        $inputtables = $this->getInputTables();
+        $newAxes = $this->getNewAxe();
+        $em = $this->getDoctrine()->getManager();
+        if (count($newAxes) > 0) {
+            foreach ($inputtables as $inputtable) {
+                $jsonTags = json_decode($inputtable->getTags());
+                foreach ($newAxes as $newAxe) {
+                    $json = '{'
+                        . '"name"' . ':"' . $newAxe['name'] . '",'
+                        . '"value"' . ':"' . 'vide' . '",'
+                        . '"code"' . ':"' . str_replace(' ', '', ucwords($newAxe['name'])) . '",'
+                        . '"calculated"' . ':"' . $newAxe['calculated'] . '",'
+                        . '"formule"' . ':"' . $newAxe['formule']
+                        . '"}';
+                    array_push($jsonTags->axeValues, json_decode($json));
+
+                }
+                $inputtable->setTags(json_encode($jsonTags));
+                $em->flush();
+            }
+        }
+        $results = $em->getRepository('VueBundle:InputTable')->findAll();
+        $serializer = $this->get('serializer');
+
+        $arraResults = $serializer->normalize($results);
+
+        return new JsonResponse($arraResults);
+
+    }
+    private function getJson() {
+        $em = $this->getDoctrine()->getManager();
+        $first = $em->getRepository('VueBundle:InputTable')->find(1);
+        $allAxes = $first->getTags();
+        return $allAxes;
+    }
+    private function getInputTables() {
+        $em = $this->getDoctrine()->getManager();
+        $results = $em->getRepository('VueBundle:InputTable')->findAll();
+        return $results;
+    }
     /**
      * @param Request $request
      * @Route("/entity", name="create_entity", options={"expose" = true})
@@ -226,6 +311,7 @@ class AdminController extends Controller
         $axes =$this->getAxisColumn();
         $fields = '';
         $i = 0;
+        $rep = false;
         $errors = '';
         foreach ($axes as $axe) {
             $name = str_replace(' ','', ucwords($axe->getName()));
@@ -242,18 +328,20 @@ class AdminController extends Controller
         $query = Constante::getCreateQuery($fields);
         $statement = $conn->prepare($query);
         try {
-            $statement->execute();
+                $statement->execute();
 
-            $args = Constante::MAPPING_IMPORT;
-            $response = $this->runCommande($args);
-            if ($response !== '') {
-                $path = Constante::ORM_PATH;
-                $supp = $this->deleteDirectory($path);
-            }
+                Constante::$table_created = 1 ;
+                $args = Constante::MAPPING_IMPORT;
+                $response = $this->runCommande($args);
+
+//            if ($response !== '') {
+//                $path = Constante::ORM_PATH;
+//                $supp = $this->deleteDirectory($path);
+//            }
 
             $this->createMatrice($conn);
         }catch (\Exception $exception) {
-            $errors = $exception->getMessage();
+            $response = $exception->getMessage();
         }
 
         return new JsonResponse([
@@ -300,20 +388,13 @@ class AdminController extends Controller
             $responses = 'Succefully';
         }catch (\Exception $exception) {
             $responses = $exception->getMessage();
-            var_dump($responses);
         }
 
         return $responses;
     }
     private function getConnection() {
-        $config = new \Doctrine\DBAL\Configuration();
-        $params = Database::getDatabase(
-            Constante::DBNAME,
-            Constante::USER,
-            Constante::PASSWORD,
-            Constante::HOST
-            );
-        $conn = DriverManager::getConnection($params, $config);
+       $conn =  $this->getDoctrine()->getConnection();
+
        return $conn;
     }
     public function longTaskAction()

@@ -7,11 +7,9 @@
     <div class="box" ng-controller="enterDataController" ng-init="initializeData()">
         <table id="dbTable"   class="table table-striped table-bordered table-list text-center">
                 <thead>
-                <tr>
+                <tr id="thColumn" hidden="hidden">
                     <th>Compoant</th>
-                    {% for item in axes %}
-                        <th>{{ item.name }}</th>
-                        {% endfor %}
+                    <th ng-repeat="col in Axecolumns">[[col]]</th>
                     <th><em class="glyphicon glyphicon-cog"></em></th>
                 </tr>
                 {#<tr><input st-search="budgetDemande" class="form-control" placeholder="global search ..." type="text"/></tr>#}

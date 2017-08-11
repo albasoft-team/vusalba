@@ -5,35 +5,34 @@ namespace Vusalba\VueBundle\Constante;
 
 class Constante
 {
-    const DBNAME = 'vusalba';
-    const USER = 'root';
-    const PASSWORD = 'root';
-    const HOST = 'localhost';
+    public static $table_created = 0 ;
     const ORM_PATH = 'src\Vusalba\VueBundle\Resources\config\doctrine';
+    const PATH = __DIR__.'/../Entity';
     const MAPPING_IMPORT = array(
         'command' => 'doctrine:mapping:import',
         'bundle' => 'VueBundle',
         'mapping-type' => 'annotation',
-        '--filter' => 'Inputtable',
+        '--filter' => 'InputTable',
         '--force' => true,
         '--no-interaction'
     );
     const MAPPING_CONVERT = array(
         'command' => 'doctrine:mapping:convert',
         'to-type' => 'annotation',
-//        'dest-path' => 'C:\wamp64\www\vusalba\src\Vusalba\VueBundle\Entity',
-        'dest-path' => '/var/www/vusalba/src/Vusalba/VueBundle/Entity',
-        '--filter' => 'Inputtable',
+        'dest-path' => 'C:\wamp64\www\vusalba\src\Vusalba\VueBundle\Entity',
+//        'dest-path' => Constante::PATH,
+//        'dest-path' => '/var/www/vusalba/src/Vusalba/VueBundle/Entity',
+//        '--filter' => 'InputTable',
         '--no-interaction'
     );
     const GENERATE_ENTITIES = array(
         'command' => 'doctrine:generate:entities',
-        'name' => 'VueBundle:Inputtable',
+        'name' => 'VueBundle:InputTable',
         '--no-interaction'
     );
     const GENERATE_CRUD = array(
         'command' => 'doctrine:generate:crud',
-        '--entity' => 'VueBundle:Inputtable',
+        '--entity' => 'VueBundle:InputTable',
         '--format' => 'annotation',
         '--no-interaction',
         '--overwrite',
@@ -45,7 +44,7 @@ class Constante
      * @return string
      */
    public static function getCreateQuery($fields) {
-       $query = "CREATE TABLE IF NOT EXISTS InputTable( `id` INTEGER NOT NULL AUTO_INCREMENT,
+       $query = "CREATE TABLE IF NOT EXISTS input_table( `id` INTEGER NOT NULL AUTO_INCREMENT,
                                   `composant_id` INTEGER NULL ,
                                   `tags` VARCHAR(1000)  NULL ,
                                    $fields,

@@ -4,27 +4,37 @@ vusalbaApp.controller('enterDataController', ['$scope','$rootScope','enterDataSe
     function ($scope, $rootScope, enterDataService) {
 
             $scope.results = [] ;
+        $scope.Axecolumns = [];
         // _show('loader');
          _hide('bodyTable');
-        $scope.iscreated = false;
-        $scope.initializeData = function () {
+         _hide('thColumn');
+        $rootScope.iscreated = false;
+        // $scope.initializeData = function () {
             enterDataService.getAll()
                 .then(function (response) {
                     _hide('loader');
                     _show('bodyTable');
+                    _show('thColumn');
                     $scope.allInputTable = response.data;
                     angular.forEach($scope.allInputTable, function (item) {
                         var itemtag = JSON.parse(item.tags);
                         $scope.results.push(itemtag);
                     });
                     if ($scope.results.length > 0 ) {
-                        $scope.iscreated = true;
+                        $rootScope.iscreated = true;
+                       angular.forEach($scope.results, function (it) {
+                           angular.forEach(it.axeValues, function (it2) {
+                               if ($scope.Axecolumns.indexOf(it2.name) === -1) {
+                                   $scope.Axecolumns.push(it2.name);
+                               }
+                           })
+                       })
                     }
-                    // console.log($scope.results);
+                    console.log($rootScope.iscreated);
                 }, function (msg) {
 
                 });
-        };
+        // };
 
         $scope.saveData = function(data, id, donnees) {
             _show('loader');
@@ -126,7 +136,18 @@ vusalbaApp.controller('enterDataController', ['$scope','$rootScope','enterDataSe
                     alert(msg);
                 })
         };
-
+        /**
+         * Mettre à jour le json en cas d'ajout de nouveaux axes
+         */
+        $scope.updataInputTable = function () {
+            $('#loader').css('display', 'block');
+            enterDataService.updateTable()
+                .then(function (response) {
+                    $('#loader').css('display', 'none');
+                }, function (msg) {
+                    alert(msg);
+                })
+        };
         $scope.enableBtn = function () {
             $('.editable-input').mask('000 000 000 000 000', {reverse: true});
             $('.editable-input').mask('#00 000 000 000 000', {reverse: true});

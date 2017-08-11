@@ -174,7 +174,7 @@ function createEntity(loading) {
             console.log(response);
         },
         error : function (response) {
-            console.log(response);
+            alert("Erreur lors du traitement !!!");
         }
     });
 }
@@ -190,7 +190,7 @@ function générateAll() {
             window.location.href = Routing.generate('enter_index');
         },
         error : function (response) {
-            console.log(response);
+            alert("Erreur lors du traitement");
         }
     });
 }
