@@ -16,6 +16,11 @@ class Constante
         '--force' => true,
         '--no-interaction'
     );
+    const CACHE_ENV_PROD = array(
+        'command' => 'cache:clear',
+        '--no-warmup',
+        '--env' => 'dev'
+    );
     const MAPPING_CONVERT = array(
         'command' => 'doctrine:mapping:convert',
         'to-type' => 'annotation',

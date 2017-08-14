@@ -332,8 +332,12 @@ class AdminController extends Controller
 
                 Constante::$table_created = 1 ;
                 $args = Constante::MAPPING_IMPORT;
+                $cache = Constante::CACHE_ENV_PROD;
+                $this->longTaskAction();
                 $response = $this->runCommande($args);
-
+                $cache_resp = $this->runCommande($cache);
+                $cache_path = $this->get('kernel')->getCacheDir(). '/../..';
+                exec('sudo chmod -R 777 '.$cache_path);
 //            if ($response !== '') {
 //                $path = Constante::ORM_PATH;
 //                $supp = $this->deleteDirectory($path);
