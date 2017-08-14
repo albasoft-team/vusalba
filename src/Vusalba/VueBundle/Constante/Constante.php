@@ -19,7 +19,7 @@ class Constante
     const CACHE_ENV_PROD = array(
         'command' => 'cache:clear',
         '--no-warmup',
-        '--env' => 'dev'
+        '--env' => 'prod'
     );
     const MAPPING_CONVERT = array(
         'command' => 'doctrine:mapping:convert',
