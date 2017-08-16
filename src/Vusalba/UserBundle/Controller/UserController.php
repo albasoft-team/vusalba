@@ -61,8 +61,8 @@ class UserController extends \FOS\UserBundle\Controller\SecurityController
             $user->setPassword($password);
             $user->setEnabled(true);
 
-//            $profile = $em->getRepository('UserBundle:Profile')->find(2);
-//            $user->setRoles([$profile]);
+            $profile = $em->getRepository('UserBundle:Profile')->find(2);
+            $user->setRoles([$profile]);
             $em->persist($user);
             $em->flush();
         } elseif ($request->getMethod() == 'POST') {

@@ -21,11 +21,11 @@
         {{ form_errors(form.node) }}
         {{ form_widget(form.node, {'attr': {'class': 'form-control'} }) }}
     </div>
-    <div class="form-group">
-        <label for="">Rôles</label>
-        {{ form_errors(form.profiles) }}
-        {{ form_widget(form.profiles, {'attr': {'class': 'form-control'} }) }}
-    </div>
+    {#<div class="form-group">#}
+        {#<label for="">Rôles</label>#}
+        {#{{ form_errors(form.profiles) }}#}
+        {#{{ form_widget(form.profiles, {'attr': {'class': 'form-control'} }) }}#}
+    {#</div>#}
 
     {{ form_widget(form._token) }}
     <div class="form-group">

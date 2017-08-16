@@ -32,11 +32,11 @@ class UserType extends AbstractType
                 'required' => false,
                 'empty_data' => null,
                 'preferred_choices' => array()
-            ))
-            ->add('profiles', EntityType::class, array(
-                'class' => 'Vusalba\UserBundle\Entity\Profile',
-                'choice_label' => 'role'
             ));
+//            ->add('profiles', EntityType::class, array(
+//                'class' => 'Vusalba\UserBundle\Entity\Profile',
+//                'choice_label' => 'role'
+//            ));
     }
     /**
      * {@inheritdoc}
