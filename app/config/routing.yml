@@ -39,6 +39,9 @@ vue_admin:
 vue_enterdata:
     resource: "@VueBundle/Controller/EnterDataController.php"
     type:     annotation
+vue_user:
+    resource: "@UserBundle/Controller/UserController.php"
+    type:     annotation
 vue:
     resource: "@VueBundle/Resources/config/routing.yml"
     prefix:   /

@@ -52,13 +52,25 @@ class Constante
        $query = "CREATE TABLE IF NOT EXISTS input_table( `id` INTEGER NOT NULL AUTO_INCREMENT,
                                   `composant_id` INTEGER NULL ,
                                   `tags` VARCHAR(1000)  NULL ,
+                                  `node_id` INTEGER  NULL ,
                                    $fields,
                                    PRIMARY KEY (`id`),
                                    CONSTRAINT `comp_inputtable_id` FOREIGN KEY (`composant_id`) REFERENCES `composant` (`id`) ON DELETE CASCADE
                                     )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
        return $query;
    }
-
+   public static function getDistinctInputs(\Doctrine\DBAL\Connection $conn) {
+       $query = "SELECT   composant_id FROM input_table GROUP BY composant_id" ;
+       $stmt = $conn->prepare($query);
+       $stmt->execute();
+       return $stmt->fetchAll();
+   }
+   public static function getLastInput(\Doctrine\DBAL\Connection $conn) {
+       $query = "SELECT id FROM input_table ORDER BY id DESC LIMIT 1";
+       $stmt = $conn->prepare($query);
+       $stmt->execute();
+       return $stmt->fetchAll();
+   }
 //   public static function insert($champs, $comp) {
 //       $query = "INSERT INTO `inputtable`".$champs . " VALUES(".$comp.")";
 //   }

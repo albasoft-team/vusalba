@@ -29,7 +29,7 @@ use Vusalba\VueBundle\Constante\Database;
 /**
  * Class AdminController
  * @package Vusalba\VueBundle\Controller
- * @Route("admin")
+ * @Route("administration")
  */
 class AdminController extends Controller
 {
@@ -41,6 +41,7 @@ class AdminController extends Controller
         $em = $this->getDoctrine()->getManager();
         $axes = $em->getRepository('VueBundle:Axis')->findBy(['iscalculated' => false]);
         $scopes = $em->getRepository('VueBundle:Node')->findAll();
+//        var_dump($this->getDistinctInputs());
         return $this->render('admin/index.html.twig', array(
             "axes" => $axes,
             'scopes' => $scopes
@@ -150,51 +151,61 @@ class AdminController extends Controller
          $composants = $em->getRepository('VueBundle:Composant')->findAll();
          return $composants;
      }
+     private function getAllNodes() {
+         $em = $this->getDoctrine()->getManager();
+         $nodes = $em->getRepository('VueBundle:Node')->findAll();
+
+         return $nodes;
+     }
      private function createMatrice(\Doctrine\DBAL\Connection $conn) {
         $comps = $this->getComposants();
         $axes = $this->getAxisColumn();
+        $nodes = $this->getAllNodes();
         $tables = [];
         $json = '';
         $id = 1;
-        foreach ($comps as $comp) {
-            $exist = false;
-            if (count($tables) >  0) {
-                foreach ($tables as $table) {
-                    if ($comp->getId() == $table->getComposant()->getId()) {
-                        $exist = true ;
+        foreach ($nodes as $node) {
+            foreach ($comps as $comp) {
+                $exist = false;
+                if (count($tables) >  0) {
+                    foreach ($tables as $table) {
+                        if ($comp->getId() == $table->getComposant()->getId()) {
+                            $exist = true ;
+                        }
                     }
                 }
-            }
-            if ($exist == false) {
-                $json = "{" . '"id"'. ':' . $id . ','.'"compId"'. ':' . $comp->getId() . ',' . '"compName"' . ':"' . $comp->getName() . '","axeValues":[';
-                $i= 0;
-                foreach ($axes as $axe) {
-                    if ($i < count($axes) - 1 ) {
-                        $json .= '{'
-                            .'"name"'.':"' . $axe->getName() . '",'
-                            . '"value"' . ':"' . 'vide'.'",'
-                            .'"code"'. ':"'.str_replace(' ','', ucwords($axe->getName())).'",'
-                            .'"calculated"'. ':"'.$axe->getIscalculated().'",'
-                            .'"formule"'. ':"'. $axe->getFormula()
-                            .'"}' .',';
+                if ($exist == false) {
+                    $json = "{" . '"id"'. ':' . $id . ','.'"compId"'. ':' . $comp->getId() . ',' . '"compName"' . ':"' . $comp->getName() . '","axeValues":[';
+                    $i= 0;
+                    foreach ($axes as $axe) {
+                        if ($i < count($axes) - 1 ) {
+                            $json .= '{'
+                                .'"name"'.':"' . $axe->getName() . '",'
+                                . '"value"' . ':'. 0 .','
+                                .'"code"'. ':"'.str_replace(' ','', ucwords($axe->getName())).'",'
+                                .'"calculated"'. ':"'.$axe->getIscalculated().'",'
+                                .'"formule"'. ':"'. $axe->getFormula()
+                                .'"}' .',';
+                        }
+                        else {
+                            $json .= '{'
+                                .'"name"' . ':"' . $axe->getName() . '",'
+                                . '"value"' . ':' . 0 .','
+                                .'" code"'. ':"'.str_replace(' ','', ucwords($axe->getName())).'",'
+                                .'"calculated"'. ':"'.$axe->getIscalculated().'",'
+                                .'"formule"'. ':"'. $axe->getFormula()
+                                .'"}';
+                        }
+                        $i++;
                     }
-                    else {
-                        $json .= '{'
-                            .'"name"' . ':"' . $axe->getName() . '",'
-                            . '"value"' . ':"' . 'vide' .'",'
-                            .'" code"'. ':"'.str_replace(' ','', ucwords($axe->getName())).'",'
-                            .'"calculated"'. ':"'.$axe->getIscalculated().'",'
-                            .'"formule"'. ':"'. $axe->getFormula()
-                            .'"}';
-                    }
-                    $i++;
+                    $json .=']}';
                 }
-                $json .=']}';
                 try{
 
                     $conn->insert('input_table', array(
                         'composant_id' => $comp->getId(),
-                        'tags' => $json
+                        'tags' => $json,
+                        'node_id' => $node->getId()
                     ));
                     $id = $conn->lastInsertId() + 1;
                     if ($id > 1) {
@@ -206,6 +217,7 @@ class AdminController extends Controller
             }
 
         }
+
      }
 
 
@@ -232,6 +244,33 @@ class AdminController extends Controller
         return new JsonResponse([
             'fields' => $fields
         ]);
+    }
+    private function getDistinctInputs() {
+        $conn = $this->getConnection();
+
+        $results = Constante::getDistinctInputs($conn);
+        return $results;
+    }
+    private function getNewComposant() {
+        $composants = $this->getComposants();
+        $tables = $this->getDistinctInputs();
+        $arrayResult = [];
+        foreach ($composants as $composant) {
+            $exist = false;
+            foreach ($tables as $table) {
+                if ($table['composant_id'] == $composant->getId()) {
+                    $exist = true;
+                }
+            }
+            if ($exist == false) {
+                array_push($arrayResult, array(
+                    'composant_id' => $composant->getId(),
+                    'name' => $composant->getName()
+                ));
+            }
+        }
+
+        return $arrayResult;
     }
     private function getNewAxe() {
         $axes = $this->getAxisColumn();
@@ -265,6 +304,7 @@ class AdminController extends Controller
 
         $inputtables = $this->getInputTables();
         $newAxes = $this->getNewAxe();
+        $newComps = $this->getNewComposant();
         $em = $this->getDoctrine()->getManager();
         if (count($newAxes) > 0) {
             foreach ($inputtables as $inputtable) {
@@ -282,6 +322,42 @@ class AdminController extends Controller
                 }
                 $inputtable->setTags(json_encode($jsonTags));
                 $em->flush();
+            }
+        }
+        $conn = $this->getConnection();
+        if (count($newComps) > 0) {
+            foreach ($newComps as $comp) {
+                $nodeID = '';
+                foreach ($inputtables as $inputtable) {
+                    $jsonTags = json_decode($inputtable->getTags());
+                    $jsonTags->compId = $comp['composant_id'];
+                    $jsonTags->compName = $comp['name'];
+                    foreach ($jsonTags->axeValues as $value) {
+                        $value->value = 0;
+                    }
+                    if ($nodeID == '') {
+                        $table = Constante::getLastInput($conn);
+                        foreach ($table as $value) {
+                            $jsonTags->id = $value['id'] + 1;
+                        }
+                        $conn->insert('input_table', array(
+                            'composant_id' => $comp['composant_id'],
+                            'tags' => json_encode($jsonTags),
+                            'node_id' => $inputtable->getNodeId()
+                        ));
+                    }
+                    if ($nodeID !=='' && $nodeID !== $inputtable->getNodeId()) {
+                        $jsonTags->id = $conn->lastInsertId()+1;
+                        $conn->insert('input_table', array(
+                            'composant_id' => $comp['composant_id'],
+                            'tags' => json_encode($jsonTags),
+                            'node_id' => $inputtable->getNodeId()
+                        ));
+
+                    }
+                    $nodeID = $inputtable->getNodeId();
+
+                }
             }
         }
         $results = $em->getRepository('VueBundle:InputTable')->findAll();
@@ -333,14 +409,14 @@ class AdminController extends Controller
                 Constante::$table_created = 1 ;
                 $args = Constante::MAPPING_IMPORT;
                 $cache = Constante::CACHE_ENV_PROD;
-                $this->longTaskAction();
+              //  $this->longTaskAction();
                 $cache_path = $this->get('kernel')->getCacheDir(). '/../..';
-                $cache_resp = $this->runCommande($cache);
-                chmod($cache_path, 777);
+//                $cache_resp = $this->runCommande($cache);
+//                chmod($cache_path, 777);
 
                 $response = $this->runCommande($args);
-                $cache_resp = $this->runCommande($cache);
-                chmod($cache_path, 777);
+//                $cache_resp = $this->runCommande($cache);
+//                chmod($cache_path, 777);
 //            if ($response !== '') {
 //                $path = Constante::ORM_PATH;
 //                $supp = $this->deleteDirectory($path);

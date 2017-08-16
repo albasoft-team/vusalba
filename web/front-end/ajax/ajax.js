@@ -2,6 +2,16 @@ function showCompForm() {
     _get('composant_new','','contentModalComp','minload');
     _showModal('frmCompModal');
 }
+function showUserForm() {
+    _get('user_add','','contentModalUser','');
+    _showModal('frmUserModal');
+}
+/** Affiche le formulaire d'ajout d'un profil **/
+function showProfilFrom() {
+    _get('profile_add','', 'contentModalProfil', '');
+    _showModal('frmProfilModal');
+}
+
 function showNodeForm() {
     _get('node_new','','contentModalScope','minloadScope');
     _showModal('frmScopeModal');
@@ -91,6 +101,16 @@ function addAxeGroup() {
         _get('axegroupe_list','', 'groupeAxe');
     });
 }
+function addUser() {
+    _post('user_add', 'frmUserAdd', 'frmUserModal', 'loadingUser', 'flashErrorFrom',function () {
+        _get('list_users','', 'users', 'loadingComp2');
+    });
+}
+function addProfil(){
+    _post('profile_add', 'frmProfilAdd', 'frmProfilModal', 'loadingProfil', 'flashErrorUsers', function () {
+        _get('profile_list','', 'profiles');
+    });
+}
 /**
  * Modification d'un niveau
  * @param id
@@ -146,6 +166,7 @@ function _post(route, formId,  modal, loading, flashError, callback,id) {
                     if (_getHtmlValue('frmScopeModal') !== '') { $('#closeScope').click();}
                     if (_getHtmlValue('frmUpdateLevel'+id) !== '') { $('#' + 'closeLevel'+id).click();}
                     if (_getHtmlValue('frmUpdateAxe'+id) !== '') { $('#' + 'closeAxe'+id).click();}
+                    if (_getHtmlValue('frmUserModal') !== '') { $('#' + 'closeuser').click();}
 
                     callback();
                 }
