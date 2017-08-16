@@ -7,10 +7,21 @@
         margin-left: 20px;
     }
 </style>
-{% if error %}
-    <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-{% endif %}
+
 <div class="login-box">
+    {% if error %}
+        <div class="box box-default">
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div class="alert alert-danger alert-dismissible">
+                    <h4><i class="icon fa fa-ban"></i> Alert!</h4>
+                    {{ error.messageKey|trans(error.messageData, 'security') }}
+                </div>
+            </div>
+            <!-- /.box-body -->
+        </div>
+    {% endif %}
+
     <div class="login-logo">
         <h3><b>VUSALBA</b></h3>
     </div>
