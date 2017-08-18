@@ -123,7 +123,7 @@ class AdminController extends Controller
      */
     public function getGroupe() {
         $em = $this->getDoctrine()->getManager();
-        $groups = $em->getRepository('VueBundle:Groupe')->findAll();
+        $groups = $em->getRepository('VueBundle:Groupe');
         $view = $this->renderView(':groupe:index.html.twig',['groupes' => $groups]);
 
         return new JsonResponse([
