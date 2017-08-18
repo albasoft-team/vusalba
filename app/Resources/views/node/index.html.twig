@@ -2,20 +2,20 @@
     <table id="nodeid" class="table table-bordered table-striped">
         <thead>
             <tr>
-                <th>Id</th>
                 <th>Name</th>
                 <th>Description</th>
                 <th>Level</th>
+                <th>Portée d'analyse</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
         {% for node in nodes %}
             <tr>
-                <td><a href="{{ path('node_show', { 'id': node.id }) }}">{{ node.id }}</a></td>
                 <td>{{ node.name }}</td>
                 <td>{{ node.description }}</td>
                 <td>{{ node.level }}</td>
+                <td>{{ node.isScopeAnalyse }}</td>
                 <td>
                     <a class="btn btn-success btn-sm" onclick="updateNode('{{ node.id }}')"><i class="glyphicon glyphicon-pencil"></i></a>
                 </td>

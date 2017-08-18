@@ -41,7 +41,7 @@ class AdminController extends Controller
         $em = $this->getDoctrine()->getManager();
         $axes = $em->getRepository('VueBundle:Axis')->findBy(['iscalculated' => false]);
         $scopes = $em->getRepository('VueBundle:Node')->findAll();
-//        var_dump($this->getDistinctInputs());
+//       var_dump($this->getNewNode());
         return $this->render('admin/index.html.twig', array(
             "axes" => $axes,
             'scopes' => $scopes
@@ -157,6 +157,12 @@ class AdminController extends Controller
 
          return $nodes;
      }
+     private function getNodeScoped() {
+         $em = $this->getDoctrine()->getManager();
+         $nodes = $em->getRepository('VueBundle:Node')->findBy(array('isScopeAnalyse' => true));
+
+         return $nodes;
+     }
      private function createMatrice(\Doctrine\DBAL\Connection $conn) {
         $comps = $this->getComposants();
         $axes = $this->getAxisColumn();
@@ -251,6 +257,13 @@ class AdminController extends Controller
         $results = Constante::getDistinctInputs($conn);
         return $results;
     }
+    private function getDistinctNodes() {
+        $conn = $this->getConnection();
+
+        $results = Constante::getDistinctNode($conn);
+        return $results;
+    }
+
     private function getNewComposant() {
         $composants = $this->getComposants();
         $tables = $this->getDistinctInputs();
@@ -270,6 +283,25 @@ class AdminController extends Controller
             }
         }
 
+        return $arrayResult;
+    }
+    private function getNewNode() {
+        $nodes = $this->getNodeScoped();
+        $tables = $this->getDistinctNodes();
+        $arrayResult = [];
+        foreach ($nodes as $node) {
+            $exist = false;
+            foreach ($tables as $table) {
+                if ($table['node_id'] == $node->getId()) {
+                    $exist = true;
+                }
+            }
+            if ($exist == false) {
+                array_push($arrayResult, array(
+                    'node_id' => $node->getId()
+                ));
+            }
+        }
         return $arrayResult;
     }
     private function getNewAxe() {
@@ -305,6 +337,7 @@ class AdminController extends Controller
         $inputtables = $this->getInputTables();
         $newAxes = $this->getNewAxe();
         $newComps = $this->getNewComposant();
+        $newNodes = $this->getNewNode();
         $em = $this->getDoctrine()->getManager();
         if (count($newAxes) > 0) {
             foreach ($inputtables as $inputtable) {
@@ -312,7 +345,7 @@ class AdminController extends Controller
                 foreach ($newAxes as $newAxe) {
                     $json = '{'
                         . '"name"' . ':"' . $newAxe['name'] . '",'
-                        . '"value"' . ':"' . 'vide' . '",'
+                        . '"value"' . ':' . 0 . ','
                         . '"code"' . ':"' . str_replace(' ', '', ucwords($newAxe['name'])) . '",'
                         . '"calculated"' . ':"' . $newAxe['calculated'] . '",'
                         . '"formule"' . ':"' . $newAxe['formule']
@@ -340,23 +373,50 @@ class AdminController extends Controller
                         foreach ($table as $value) {
                             $jsonTags->id = $value['id'] + 1;
                         }
-                        $conn->insert('input_table', array(
-                            'composant_id' => $comp['composant_id'],
-                            'tags' => json_encode($jsonTags),
-                            'node_id' => $inputtable->getNodeId()
-                        ));
                     }
-                    if ($nodeID !=='' && $nodeID !== $inputtable->getNodeId()) {
+                    if ($nodeID !=='' && $nodeID !== $inputtable->getNode()->getId()) {
                         $jsonTags->id = $conn->lastInsertId()+1;
-                        $conn->insert('input_table', array(
-                            'composant_id' => $comp['composant_id'],
-                            'tags' => json_encode($jsonTags),
-                            'node_id' => $inputtable->getNodeId()
-                        ));
-
                     }
-                    $nodeID = $inputtable->getNodeId();
+                    $conn->insert('input_table', array(
+                        'composant_id' => $comp['composant_id'],
+                        'tags' => json_encode($jsonTags),
+                        'node_id' => $inputtable->getNode()->getId()
+                    ));
+                    $nodeID = $inputtable->getNode()->getId();
 
+                }
+            }
+        }
+        if (count($newNodes) > 0) {
+
+            $comps = $this->getComposants();
+            $tags = [];
+
+            foreach ($newNodes as $newNode) {
+                $nodeID = '';
+                $table = Constante::getLastInput($conn);
+                foreach ($table as $value) {
+                    $tags = json_decode($value['tags']);
+                    $id = $value['id'];
+                }
+                foreach ($comps as $comp) {
+                    $tags->compId = $comp->getId();
+                    $tags->compName = $comp->getName();
+                    foreach ($tags->axeValues as $value) {
+                        $value->value = 0;
+                    }
+                    if ($nodeID == '') {
+                        $tags->id = intval($id)+1;
+                    }
+                    if ($nodeID !== '') {
+                        $tags->id = $conn->lastInsertId() + 1;
+                    }
+                    $conn->insert('input_table', array(
+                        'composant_id' => $comp->getId(),
+                        'tags' => json_encode($tags),
+                        'node_id' => $newNode['node_id']
+                    ));
+                    $nodeID = $newNode['node_id'];
                 }
             }
         }
@@ -424,11 +484,12 @@ class AdminController extends Controller
 
             $this->createMatrice($conn);
         }catch (\Exception $exception) {
-            $response = $exception->getMessage();
+            $errors = $exception->getMessage();
         }
 
         return new JsonResponse([
-            'result' => $response
+            'result' => $response,
+            'error' => $errors
         ]);
     }
 

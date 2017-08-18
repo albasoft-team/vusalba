@@ -89,6 +89,14 @@ class LevelController extends Controller
         $editForm->handleRequest($request);
         $niveau = $level->getNiveau();
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $nodes = $em->getRepository('VueBundle:Node')->findBy(array('level' => $niveau));
+                foreach ($nodes as $node) {
+                    $node->setIsScopeAnalyse($level->getScopeAnalysis());
+                    $em->flush();
+                }
+
+
             $this->getDoctrine()->getManager()->flush();
         }
         $view =  $this->renderView(':level:edit.html.twig', ['form' => $editForm->createView(),'id' =>$id , 'level' => $niveau]);

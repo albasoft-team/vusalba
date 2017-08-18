@@ -50,6 +50,12 @@ class Node
     private $parent;
 
     /**
+     * @var bool
+     * @ORM\Column(name="isScopeAnalyse", type="boolean")
+     */
+    private $isScopeAnalyse;
+
+    /**
      * Get id
      *
      * @return int
@@ -153,5 +159,21 @@ class Node
     public function getParent()
     {
         return $this->parent;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsScopeAnalyse()
+    {
+        return $this->isScopeAnalyse;
+    }
+
+    /**
+     * @param bool $isScopeAnalysis
+     */
+    public function setIsScopeAnalyse($isScopeAnalyse)
+    {
+        $this->isScopeAnalyse = $isScopeAnalyse;
     }
 }

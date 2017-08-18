@@ -156,12 +156,14 @@ class AxisController extends Controller
                 $this->getDoctrine()->getManager()->flush();
             }
             $view =  $this->renderView(':axis:edit.html.twig', ['form' => $editForm->createView(), 'id'=>$id]);
-
+            return New JsonResponse([
+                'view' => $view,
+                'error' => null
+            ]);
         }catch (\Exception $exception) {
-            $errors = $exception->getMessage();
+            $errors = $exception->getMessage(). $exception->getLine() . $exception->getFile();
         }
        return New JsonResponse([
-            'view' => $view,
             'error' => $errors
         ]);
 

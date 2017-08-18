@@ -188,11 +188,15 @@ function createEntity(loading) {
         data : {},
         success : function (response) {
             $('#loader').css('display', 'none');
-            _show('finalId');
+            if (response.error == '') {
+                _show('finalId');
+            }
+            else {
+                alert(response.error);
+            }
             // _hide('generateId');
             // _show('updateId');
             // $('#finalId').css('display', 'block');
-            console.log(response);
         },
         error : function (response) {
             alert("Erreur lors du traitement !!!");

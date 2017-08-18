@@ -13,23 +13,31 @@ vusalbaApp.controller('enterDataController', ['$scope','$rootScope','enterDataSe
             enterDataService.getAll()
                 .then(function (response) {
                     _hide('loader');
-                    _show('bodyTable');
-                    _show('thColumn');
-                    $scope.allInputTable = response.data;
-                    angular.forEach($scope.allInputTable, function (item) {
-                        var itemtag = JSON.parse(item.tags);
-                        $scope.results.push(itemtag);
-                    });
-                    if ($scope.results.length > 0 ) {
-                        $rootScope.iscreated = true;
-                       angular.forEach($scope.results, function (it) {
-                           angular.forEach(it.axeValues, function (it2) {
-                               if ($scope.Axecolumns.indexOf(it2.name) === -1) {
-                                   $scope.Axecolumns.push(it2.name);
-                               }
-                           })
-                       })
+                    console.log(response);
+                    if (response.data.length > 0) {
+                        _show('bodyTable');
+                        _show('thColumn');
+                        $scope.allInputTable = response.data;
+                        angular.forEach($scope.allInputTable, function (item) {
+                            var itemtag = JSON.parse(item.tags);
+                            $scope.results.push(itemtag);
+                        });
+                        if ($scope.results.length > 0 ) {
+                            $rootScope.iscreated = true;
+                            angular.forEach($scope.results, function (it) {
+                                angular.forEach(it.axeValues, function (it2) {
+                                    if ($scope.Axecolumns.indexOf(it2.name) === -1) {
+                                        $scope.Axecolumns.push(it2.name);
+                                    }
+                                })
+                            })
+                        }
                     }
+                    else {
+                        _show('empty');
+                        $scope.emptyData = "Cet utilisateur n'a pas données à saisir"
+                    }
+
                     console.log($rootScope.iscreated);
                 }, function (msg) {
 

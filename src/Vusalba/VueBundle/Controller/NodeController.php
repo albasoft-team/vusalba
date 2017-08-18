@@ -63,6 +63,7 @@ class NodeController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $level =  $em->getRepository('VueBundle:Level');
+            $node->setIsScopeAnalyse(false);
             if (!$this->isLevelExist())
             {
                 $node->setParent(null);
@@ -84,6 +85,20 @@ class NodeController extends Controller
                     $level->createLevel('Level'.($parent_level + 1) ,false,$parent_level + 1);
                     $node->setLevel($parent_level+1);
                     $this->persistNode($em, $node);
+                }
+            }
+            $lastNode = $this->getDoctrine()
+                            ->getManager()
+                            ->getRepository('VueBundle:Node')->findBy([],['id' => 'DESC'],['limit' => 1]);
+            $listLevels = $this->getDoctrine()
+                                ->getManager()
+                                ->getRepository('VueBundle:Level')->findAll();
+            foreach ($listLevels as $listLevel) {
+                foreach ($lastNode as $last) {
+                    if ($listLevel->getNiveau() == $last->getLevel() && $listLevel->getScopeAnalysis() ==true) {
+                        $last->setIsScopeAnalyse(true);
+                        $this->getDoctrine()->getManager()->flush();
+                    }
                 }
             }
         }elseif ($request->getMethod() == 'POST') {

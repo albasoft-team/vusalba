@@ -15,11 +15,12 @@
         <label for="exampleInput">Axe Calculé ?</label>
          {#{{ form_label("Axe Calculé ?") }}#}
         {{ form_errors(form.iscalculated) }}
-         <div class="checkbox">
-             <label>
-                 <input id="iscalculated" type="checkbox" name="vusalba_vuebundle_axis[iscalculated]" value="{{ form.iscalculated }}"> axe calculé ?
-             </label>
-         </div>
+         {{ form_widget(form.iscalculated) }}
+         {#<div class="checkbox">#}
+             {#<label>#}
+                 {#<input id="iscalculated" type="checkbox" name="vusalba_vuebundle_axis[iscalculated]" value="{{ form.iscalculated }}"> axe calculé ?#}
+             {#</label>#}
+         {#</div>#}
         {#{{ form_widget(form.iscalculated) }}#}
     </div>
     <div class="form-group" id="formula" style="display: none">

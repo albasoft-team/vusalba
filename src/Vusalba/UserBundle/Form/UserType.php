@@ -9,6 +9,9 @@
 namespace Vusalba\UserBundle\Form;
 
 
+use Doctrine\DBAL\DriverManager;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -28,6 +31,11 @@ class UserType extends AbstractType
             ->add('plainPassword')
             ->add('node', EntityType::class, array(
                 'class' => 'Vusalba\VueBundle\Entity\Node',
+                'query_builder' => function (EntityRepository $repository) {
+                    return $repository->createQueryBuilder('q')
+                        ->where('q.isScopeAnalyse='.true)
+                        ->orderBy('q.name');
+                },
                 'choice_label' => 'name',
                 'required' => false,
                 'empty_data' => null,

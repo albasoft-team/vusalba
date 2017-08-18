@@ -42,7 +42,12 @@ class EnterDataController extends Controller
     public function getAll() {
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
-        $inputtales = $em->getRepository('VueBundle:InputTable')->findBy(array('nodeId' => $user->getNode()->getId()));
+        $inputtales = [];
+        if ($user->getNode()) {
+            $inputtales = $em->getRepository('VueBundle:InputTable')->findBy(array(
+                'node' => $user->getNode()
+            ));
+        }
         $serializer = $this->get('serializer');
         $arrayResult = $serializer->normalize($inputtales);
 
