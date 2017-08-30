@@ -101,6 +101,7 @@ class AxisController extends Controller
         try {
             $em = $this->getDoctrine()->getManager();
             if ($form->isSubmitted() && $form->isValid()) {
+                $axi->setCode(str_replace(' ','', ucwords($axi->getName())));
                 $em->persist($axi);
                 $em->flush();
 

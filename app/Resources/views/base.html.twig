@@ -28,6 +28,7 @@
         <link rel="stylesheet" href="{{ asset('front-end/dist/css/style.css') }}">
         <link rel="stylesheet" href="{{ asset('bundles/vue/css/mystyle.css') }}">
         <link rel="stylesheet" href="{{ asset('front-end/bower_components/angular-xeditable/dist/css/xeditable.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('front-end/node_modules/bootstrap-select/dist/css/bootstrap-select.min.css') }}">
         <style>
             .content {
                 padding-top: 35px!important;
@@ -236,6 +237,13 @@
         <script src="{{ asset('front-end/dist/js/demo.js') }}"></script>
         <script src="{{ asset('front-end/bower_components/bs-select/js/bootstrap-select.min.js') }}"></script>
         <script src="{{ asset('front-end/bower_components/jquery-mask-plugin/dist/jquery.mask.min.js') }}"></script>
+        <script src="{{ asset('front-end/bower_components/highcharts/highcharts.js') }}"></script>
+        {#<script src="{{ asset('front-end/bower_components/highcharts/js/highstock.js') }}"></script>#}
+        <script src="{{ asset('front-end/bower_components/highcharts/js/modules/map.js') }}"></script>
+        <script src="{{ asset('front-end/bower_components/highcharts/js/modules/exporting.js') }}"></script>
+        <script src="{{ asset('front-end/bower_components/highcharts/map/sn-all.js') }}"></script>
+        <script src="{{ asset('front-end/node_modules/bootstrap-select/dist/js/bootstrap-select.min.js') }}"></script>
+        <script src="{{ asset('front-end/bower_components/highcharts/modules/drilldown.js') }}"></script>
 
         <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
         <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
@@ -246,9 +254,11 @@
 
         <script src="{{ asset('front-end/service/composant.js') }}"></script>
         <script src="{{ asset('front-end/service/enterDataService.js') }}"></script>
+        <script src="{{ asset('front-end/service/analyzer.js') }}"></script>
 
         <script src="{{ asset('front-end/controller/composant.js') }}"></script>
         <script src="{{ asset('front-end/controller/enterData.js') }}"></script>
+        <script src="{{ asset('front-end/controller/analyze.js') }}"></script>
 
         <script src="{{ asset('front-end/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js') }}"></script>
         <script src="{{ asset('front-end/bower_components/angular-bootstrap/ui-bootstrap.min.js') }}"></script>

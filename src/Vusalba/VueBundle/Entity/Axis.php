@@ -34,6 +34,13 @@ class Axis
      * @ORM\Column(name="description", type="string", length=255)
      */
     private $description;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="code", type="string", length=255, nullable=true)
+     */
+    private $code;
+
 
     /**
      * @var AxeGroupe
@@ -185,5 +192,21 @@ class Axis
     public function getGroupe()
     {
         return $this->groupe;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * @param string $code
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
     }
 }

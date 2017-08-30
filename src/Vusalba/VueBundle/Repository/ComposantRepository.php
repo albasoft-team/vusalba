@@ -10,4 +10,14 @@ namespace Vusalba\VueBundle\Repository;
  */
 class ComposantRepository extends \Doctrine\ORM\EntityRepository
 {
+
+    public function getComposantByGroupe() {
+        $query = $this->createQueryBuilder('q')
+            ->join('q.groupe','groupe')
+            ->select('q')
+            ->groupBy('groupe.id')
+            ->getQuery();
+
+        return $query->getArrayResult();
+    }
 }

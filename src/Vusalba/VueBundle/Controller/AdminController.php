@@ -197,7 +197,7 @@ class AdminController extends Controller
                             $json .= '{'
                                 .'"name"' . ':"' . $axe->getName() . '",'
                                 . '"value"' . ':' . 0 .','
-                                .'" code"'. ':"'.str_replace(' ','', ucwords($axe->getName())).'",'
+                                .'"code"'. ':"'.str_replace(' ','', ucwords($axe->getName())).'",'
                                 .'"calculated"'. ':"'.$axe->getIscalculated().'",'
                                 .'"formule"'. ':"'. $axe->getFormula()
                                 .'"}';
